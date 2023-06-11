@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.processo.dto.UsuarioDto;
 import br.com.processo.service.UsuarioInterface;
 
+/*Controller*/
 @RestController
 @RequestMapping("/acompanhamento-processo")
 public class UsuarioController {
