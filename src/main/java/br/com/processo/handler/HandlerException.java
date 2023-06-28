@@ -12,6 +12,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.auth0.jwt.exceptions.JWTDecodeException;
 
 import br.com.processo.exception.ErroException;
 import br.com.processo.exception.FieldErrors;
@@ -54,4 +57,27 @@ public class HandlerException {
 				exception.getClass().toString());
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
+	
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<ErroException> responseStatusException(ResponseStatusException exception){
+		ErroException error = new ErroException(
+				LocalDateTime.now(), 
+				HttpStatus.UNAUTHORIZED.value(), 
+				"Request failed with status code", 
+				"Usuário ou senha inválida", 
+				exception.getClass().toString());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+	}
+	
+	@ExceptionHandler(JWTDecodeException.class)
+	public ResponseEntity<ErroException> jWTDecodeException(JWTDecodeException exception){
+		ErroException error = new ErroException(
+				LocalDateTime.now(), 
+				HttpStatus.FORBIDDEN.value(), 
+				"Request failed with status", 
+				"Erro na validação do token", 
+				exception.getClass().toString());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+	}
+	
 }
